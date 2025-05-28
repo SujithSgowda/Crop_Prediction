@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg p-10 mt-14 border border-blue-100">
+        <div class="flex items-center justify-center mb-6">
+            <svg class="w-12 h-12 text-blue-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+            </svg>
+            <div>
+                <h2 class="text-3xl font-bold text-blue-900 mb-2">Rainfall Prediction</h2>
+                <p class="text-gray-600">Get AI-powered rainfall predictions based on weather parameters</p>
+            </div>
+        </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+        <form id="rainfallForm" method="post" class="space-y-8">
+            {% csrf_token %}
+            
+            <!-- Location Selection -->
+            <div class="bg-gray-50/50 rounded-lg p-6 space-y-6">
+                <h3 class="text-lg font-semibold text-gray-900">Location Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="state" class="block text-sm font-medium text-gray-700 mb-2">State/Region</label>
+                        <select class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" id="state" name="state" required>
+                            <option value="">Select State</option>
+                            <option value="ANDAMAN & NICOBAR ISLANDS">Andaman & Nicobar Islands</option>
+                            <option value="ANDHRA PRADESH">Andhra Pradesh</option>
+                            <option value="ARUNACHAL PRADESH">Arunachal Pradesh</option>
+                            <option value="ASSAM & MEGHALAYA">Assam & Meghalaya</option>
+                            <option value="BIHAR">Bihar</option>
+                            <option value="CHHATTISGARH">Chhattisgarh</option>
+                            <option value="COASTAL ANDHRA PRADESH">Coastal Andhra Pradesh</option>
+                            <option value="COASTAL KARNATAKA">Coastal Karnataka</option>
+                            <option value="GUJARAT">Gujarat</option>
+                            <option value="HARYANA">Haryana</option>
+                            <option value="HIMACHAL PRADESH">Himachal Pradesh</option>
+                            <option value="JAMMU & KASHMIR">Jammu & Kashmir</option>
+                            <option value="JHARKHAND">Jharkhand</option>
+                            <option value="KERALA">Kerala</option>
+                            <option value="MADHYA PRADESH">Madhya Pradesh</option>
+                            <option value="MAHARASHTRA">Maharashtra</option>
+                            <option value="MANIPUR">Manipur</option>
+                            <option value="MEGHALAYA">Meghalaya</option>
+                            <option value="MIZORAM">Mizoram</option>
+                            <option value="NAGALAND">Nagaland</option>
+                            <option value="ORISSA">Orissa</option>
+                            <option value="PUNJAB">Punjab</option>
+                            <option value="RAJASTHAN">Rajasthan</option>
+                            <option value="TAMIL NADU">Tamil Nadu</option>
+                            <option value="TELANGANA">Telangana</option>
+                            <option value="TRIPURA">Tripura</option>
+                            <option value="UTTARAKHAND">Uttarakhand</option>
+                            <option value="UTTAR PRADESH">Uttar Pradesh</option>
+                            <option value="WEST BENGAL">West Bengal</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="year" class="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                        <input type="number" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" id="year" name="year" min="2015" max="2030" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit" class="px-6 py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-500/20 transition-all transform hover:-translate-y-0.5">
+                    Get Prediction
+                </button>
+            </div>
+        </form>
+
+        <!-- Result Section -->
+        <div id="result" class="mt-8 hidden">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <div class="flex items-center justify-center mb-4">
+                    <svg class="w-8 h-8 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+                    </svg>
+                    <h4 class="text-xl font-semibold text-gray-900">Prediction Result</h4>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Predicted Rainfall:</span>
+                        <span id="prediction-text" class="text-gray-900 font-semibold"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Classification:</span>
+                        <span id="classification-text" class="text-gray-900 font-semibold"></span>
+                    </div>
+                    <hr class="border-blue-200">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Historical Average:</span>
+                        <span id="historical-text" class="text-gray-900 font-semibold"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('rainfallForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading state
+    document.querySelector('button[type="submit"]').disabled = true;
+    document.querySelector('button[type="submit"]').innerHTML = 'Processing...';
+    
+    const formData = new FormData(this);
+    
+    fetch('{% url "rainfall_prediction:predict_rainfall" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('result').classList.remove('hidden');
+        document.getElementById('prediction-text').textContent = `${data.prediction} mm`;
+        document.getElementById('classification-text').textContent = data.classification;
+        document.getElementById('historical-text').textContent = `${data.historical_avg} mm`;
+        
+        // Reset button state
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').innerHTML = 'Get Prediction';
+        
+        // Smooth scroll to results
+        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Reset button state
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').innerHTML = 'Get Prediction';
+    });
+});
+</script>
+{% endblock %}

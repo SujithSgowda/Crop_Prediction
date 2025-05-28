@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-lg p-10 mt-14 border border-green-100">
+        <div class="flex items-center justify-center mb-6">
+            <svg class="w-12 h-12 text-green-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
+            </svg>
+            <div>
+                <h2 class="text-3xl font-bold text-green-900 mb-2">Fertilizer Recommendation</h2>
+                <p class="text-gray-600">Get AI-powered fertilizer recommendations based on your soil conditions</p>
+            </div>
+        </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+        <form id="fertilizerForm" method="post" class="space-y-8">
+            {% csrf_token %}
+            
+            <!-- Environmental Parameters -->
+            <div class="bg-gray-50/50 rounded-lg p-6 space-y-6">
+                <h3 class="text-lg font-semibold text-gray-900">Environmental Parameters</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="temperature" class="block text-sm font-medium text-gray-700 mb-2">Temperature (°C)</label>
+                        <input type="number" step="0.01" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" id="temperature" name="temperature" required>
+                    </div>
+                    <div>
+                        <label for="humidity" class="block text-sm font-medium text-gray-700 mb-2">Humidity (%)</label>
+                        <input type="number" step="0.01" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" id="humidity" name="humidity" required>
+                    </div>
+                    <div>
+                        <label for="moisture" class="block text-sm font-medium text-gray-700 mb-2">Moisture (%)</label>
+                        <input type="number" step="0.01" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" id="moisture" name="moisture" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soil and Crop Selection -->
+            <div class="bg-gray-50/50 rounded-lg p-6 space-y-6">
+                <h3 class="text-lg font-semibold text-gray-900">Soil and Crop Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="soil_type" class="block text-sm font-medium text-gray-700 mb-2">Soil Type</label>
+                        <select class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" id="soil_type" name="soil_type" required>
+                            <option value="">Select soil type</option>
+                            <option value="Black">Black</option>
+                            <option value="Clayey">Clayey</option>
+                            <option value="Loamy">Loamy</option>
+                            <option value="Red">Red</option>
+                            <option value="Sandy">Sandy</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="crop_type" class="block text-sm font-medium text-gray-700 mb-2">Crop Type</label>
+                        <select class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" id="crop_type" name="crop_type" required>
+                            <option value="">Select crop type</option>
+                            <option value="Barley">Barley</option>
+                            <option value="Cotton">Cotton</option>
+                            <option value="Ground Nuts">Ground Nuts</option>
+                            <option value="Maize">Maize</option>
+                            <option value="Millets">Millets</option>
+                            <option value="Oil seeds">Oil seeds</option>
+                            <option value="Paddy">Paddy</option>
+                            <option value="Pulses">Pulses</option>
+                            <option value="Sugarcane">Sugarcane</option>
+                            <option value="Tobacco">Tobacco</option>
+                            <option value="Wheat">Wheat</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nutrient Levels -->
+            <div class="bg-gray-50/50 rounded-lg p-6 space-y-6">
+                <h3 class="text-lg font-semibold text-gray-900">Nutrient Levels</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="nitrogen" class="block text-sm font-medium text-blue-900 mb-1">Nitrogen (N)</label>
+                        <input type="number" name="nitrogen" id="nitrogen" step="any" class="mui-input" required>
+                    </div>
+                    <div>
+                        <label for="phosphorus" class="block text-sm font-medium text-blue-900 mb-1">Phosphorus (P)</label>
+                        <input type="number" name="phosphorus" id="phosphorus" step="any" class="mui-input" required>
+                    </div>
+                    <div>
+                        <label for="potassium" class="block text-sm font-medium text-blue-900 mb-1">Potassium (K)</label>
+                        <input type="number" name="potassium" id="potassium" step="any" class="mui-input" required>
+                    </div>
+                    <div>
+                        <label for="crop" class="block text-sm font-medium text-blue-900 mb-1">Crop</label>
+                        <input type="text" name="crop" id="crop" class="mui-input" required>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-10">
+                    <button type="submit" class="mui-btn-primary">
+                        <span class="material-icons mr-2">science</span> Get Recommendation
+                    </button>
+                </div>
+                <style>
+                    .mui-input {
+                        width: 100%;
+                        padding: 0.75rem 1rem;
+                        border-radius: 8px;
+                        border: 1.5px solid #b6c2d2;
+                        background: #f8fafc;
+                        font-size: 1rem;
+                        color: #1e293b;
+                        transition: border-color 0.2s, box-shadow 0.2s;
+                        box-shadow: 0 1px 2px rgba(25, 118, 210, 0.03);
+                    }
+                    .mui-input:focus {
+                        outline: none;
+                        border-color: #1976d2;
+                        box-shadow: 0 0 0 2px #1976d233;
+                    }
+                    .mui-btn-primary {
+                        display: inline-flex;
+                        align-items: center;
+                        background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+                        color: #fff;
+                        font-weight: 500;
+                        font-size: 1.1rem;
+                        padding: 0.75rem 2.5rem;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+                        border: none;
+                        cursor: pointer;
+                        transition: background 0.2s, box-shadow 0.2s;
+                    }
+                    .mui-btn-primary:hover {
+                        background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+                        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.12);
+                    }
+                </style>
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit" class="px-6 py-3 bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500/20 transition-all transform hover:-translate-y-0.5">
+                    Get Recommendation
+                </button>
+            </div>
+        </form>
+
+        <!-- Result Section -->
+        <div id="fertilizer-result" class="mt-10 hidden">
+            <div class="mui-result-card">
+                <span class="material-icons mui-result-icon">eco</span>
+                <h3 class="mui-result-title">Recommended Fertilizer</h3>
+                <p id="fertilizer-recommendation" class="mui-result-value"></p>
+            </div>
+            <style>
+                .mui-result-card {
+                    background: #e3f2fd;
+                    border: 1.5px solid #90caf9;
+                    border-radius: 16px;
+                    padding: 2.5rem 2rem 2rem 2rem;
+                    box-shadow: 0 4px 24px rgba(25, 118, 210, 0.08);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin: 0 auto;
+                    max-width: 480px;
+                }
+                .mui-result-icon {
+                    font-size: 3.5rem;
+                    color: #1976d2;
+                    margin-bottom: 0.5rem;
+                }
+                .mui-result-title {
+                    font-size: 1.4rem;
+                    font-weight: 600;
+                    color: #1976d2;
+                    margin-bottom: 0.5rem;
+                    font-family: 'Roboto', 'Helvetica Neue', Arial, 'sans-serif';
+                }
+                .mui-result-value {
+                    font-size: 1.2rem;
+                    color: #1e293b;
+                    font-weight: 500;
+                    text-align: center;
+                }
+            </style>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('fertilizerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading state
+    document.querySelector('button[type="submit"]').disabled = true;
+    document.querySelector('button[type="submit"]').innerHTML = 'Processing...';
+    
+    const formData = new FormData(this);
+    
+    fetch('{% url "fertilizer_recommendation:predict_fertilizer" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('result').classList.remove('hidden');
+        document.getElementById('prediction-text').textContent = `Recommended Fertilizer: ${data.prediction}`;
+        document.getElementById('recommendation-text').textContent = data.recommendation;
+        
+        // Reset button state
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').innerHTML = 'Get Recommendation';
+        
+        // Smooth scroll to results
+        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Reset button state
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').innerHTML = 'Get Recommendation';
+    });
+});
+</script>
+{% endblock %}

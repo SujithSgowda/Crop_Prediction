@@ -1,0 +1,316 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AgriTech Pro - Advanced Crop Management System{% endblock %}</title>
+    
+    <!-- Material Design Icons and Fonts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --color-primary: #2E7D32;
+            --color-primary-light: #4CAF50;
+            --color-primary-dark: #1B5E20;
+            --color-secondary: #F5F7FA;
+            --color-accent: #FF6B6B;
+            --color-text: #1A2027;
+            --color-text-light: #4A5568;
+            --color-background: #FFFFFF;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text);
+            background-color: var(--color-secondary);
+        }
+
+        .nav-link {
+            color: var(--color-text-light);
+            transition: color 0.2s, transform 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card {
+            background: var(--color-background);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #81C784;
+            --accent-color: #FF8F00;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8F9FA;
+            --nav-height: 72px;
+        }
+        body {
+            font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        .mui-appbar {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .mui-appbar .mui-title {
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: 0.02em;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        .mui-nav-link {
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            margin: 0 0.25rem;
+        }
+        .mui-nav-link:hover {
+            color: var(--primary-color);
+            background: var(--bg-secondary);
+        }
+        .mui-nav-link.active {
+            color: var(--primary-color);
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+        .mui-nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        .mui-footer {
+            background: var(--bg-primary);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .mui-main {
+            margin-top: var(--nav-height);
+            background: var(--bg-secondary);
+        }
+        .card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }</style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center space-x-3">
+                        <img src="{% static 'img/logo.svg' %}" alt="AgriTech Pro Logo" class="h-10 w-auto">
+                        <span class="text-2xl font-bold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">AgriTech Pro</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                        <span class="material-icons mr-1 text-sm">home</span> Home
+                    </a>
+                    <a href="{% url 'crop_prediction:crop_prediction' %}" class="nav-link {% if 'crop_prediction' in request.path %}active{% endif %}">
+                        <span class="material-icons mr-1 text-sm">grass</span> Crop Prediction
+                    </a>
+                    <a href="{% url 'fertilizer_recommendation:fertilizer_recommendation' %}" class="nav-link {% if 'fertilizer_recommendation' in request.path %}active{% endif %}">
+                        <span class="material-icons mr-1 text-sm">science</span> Fertilizer
+                    </a>
+                    <a href="{% url 'rainfall_prediction:rainfall_prediction' %}" class="nav-link {% if 'rainfall_prediction' in request.path %}active{% endif %}">
+                        <span class="material-icons mr-1 text-sm">water_drop</span> Rainfall
+                    </a>
+                    <a href="{% url 'yield_prediction:yield_prediction' %}" class="nav-link {% if 'yield_prediction' in request.path %}active{% endif %}">
+                        <span class="material-icons mr-1 text-sm">trending_up</span> Yield
+                    </a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button type="button" class="mobile-menu-button p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500">
+                        <span class="material-icons">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="{% url 'home' %}" class="nav-link block px-3 py-2 rounded-md {% if request.path == '/' %}active{% endif %}">
+                    <span class="material-icons mr-1">home</span> Home
+                </a>
+                <a href="{% url 'crop_prediction:crop_prediction' %}" class="nav-link block px-3 py-2 rounded-md {% if 'crop_prediction' in request.path %}active{% endif %}">
+                    <span class="material-icons mr-1">grass</span> Crop Prediction
+                </a>
+                <a href="{% url 'fertilizer_recommendation:fertilizer_recommendation' %}" class="nav-link block px-3 py-2 rounded-md {% if 'fertilizer_recommendation' in request.path %}active{% endif %}">
+                    <span class="material-icons mr-1">science</span> Fertilizer Recommendation
+                </a>
+                <a href="{% url 'rainfall_prediction:rainfall_prediction' %}" class="nav-link block px-3 py-2 rounded-md {% if 'rainfall_prediction' in request.path %}active{% endif %}">
+                    <span class="material-icons mr-1">water_drop</span> Rainfall Prediction
+                </a>
+                <a href="{% url 'yield_prediction:yield_prediction' %}" class="nav-link block px-3 py-2 rounded-md {% if 'yield_prediction' in request.path %}active{% endif %}">
+                    <span class="material-icons mr-1">trending_up</span> Yield Prediction
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% if messages %}
+            <div class="messages mb-8">
+                {% for message in messages %}
+                    <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r-lg shadow-sm" role="alert">
+                        <div class="flex items-center">
+                            <span class="material-icons mr-2">info</span>
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="{% static 'img/logo.svg' %}" alt="AgriTech Pro Logo" class="h-10 w-auto brightness-0 invert">
+                        <span class="text-2xl font-bold text-white">AgriTech Pro</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Empowering farmers with AI-driven insights for sustainable and profitable agriculture. With over 10 years of expertise in agricultural technology.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <span class="material-icons">facebook</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <span class="material-icons">twitter</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <span class="material-icons">linkedin</span>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'home' %}" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="{% url 'crop_prediction:crop_prediction' %}" class="text-gray-400 hover:text-white transition-colors">Crop Prediction</a></li>
+                        <li><a href="{% url 'fertilizer_recommendation:fertilizer_recommendation' %}" class="text-gray-400 hover:text-white transition-colors">Fertilizer</a></li>
+                        <li><a href="{% url 'rainfall_prediction:rainfall_prediction' %}" class="text-gray-400 hover:text-white transition-colors">Rainfall</a></li>
+                        <li><a href="{% url 'yield_prediction:yield_prediction' %}" class="text-gray-400 hover:text-white transition-colors">Yield</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center text-gray-400">
+                            <span class="material-icons mr-2">email</span>
+                            contact@agritechpro.com
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <span class="material-icons mr-2">phone</span>
+                            +1 (888) 123-4567
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <span class="material-icons mr-2">location_on</span>
+                            123 AgriTech Street<br>Innovation Valley, CA 94025
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-400">&copy; {% now "Y" %} AgriTech Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile menu JavaScript -->
+    <script>
+        document.querySelector('.mobile-menu-button').addEventListener('click', function() {
+            document.querySelector('.mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
