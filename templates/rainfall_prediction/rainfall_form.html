@@ -105,43 +105,5 @@
     </div>
 </div>
 
-<script>
-document.getElementById('rainfallForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Show loading state
-    document.querySelector('button[type="submit"]').disabled = true;
-    document.querySelector('button[type="submit"]').innerHTML = 'Processing...';
-    
-    const formData = new FormData(this);
-    
-    fetch('{% url "rainfall_prediction:predict_rainfall" %}', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('result').classList.remove('hidden');
-        document.getElementById('prediction-text').textContent = `${data.prediction} mm`;
-        document.getElementById('classification-text').textContent = data.classification;
-        document.getElementById('historical-text').textContent = `${data.historical_avg} mm`;
-        
-        // Reset button state
-        document.querySelector('button[type="submit"]').disabled = false;
-        document.querySelector('button[type="submit"]').innerHTML = 'Get Prediction';
-        
-        // Smooth scroll to results
-        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        // Reset button state
-        document.querySelector('button[type="submit"]').disabled = false;
-        document.querySelector('button[type="submit"]').innerHTML = 'Get Prediction';
-    });
-});
-</script>
+<script src="{% static 'js/rainfall_prediction.js' %}"></script>
 {% endblock %}

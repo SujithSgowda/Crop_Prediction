@@ -1,0 +1,19 @@
+# Django and related packages
+Django>=4.2.0,<5.0.0
+django-crispy-forms>=2.0.0
+crispy-tailwind>=0.5.0
+django-tailwind>=3.6.0
+django-browser-reload>=1.11.0
+
+# REST framework
+djangorestframework>=3.14.0
+
+# Machine Learning packages
+scikit-learn>=1.2.0
+pandas>=2.0.0
+numpy>=1.24.0
+joblib>=1.2.0
+
+# Other dependencies
+python-dotenv>=1.0.0
+Pillow>=10.0.0

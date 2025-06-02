@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import pandas as pd
 import numpy as np
-import joblib
+from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier
 import os
 
 def fertilizer_recommendation(request):
@@ -21,13 +22,31 @@ def predict_fertilizer(request):
             phosphorus = float(request.POST.get('phosphorus'))
             potassium = float(request.POST.get('potassium'))
 
-            # Load the ML model
-            model_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-                                    'ML', 'fertilizer_recommendation', 'fertilizer_model.pkl')
-            model = joblib.load(model_path)
+            # Load the dataset
+            data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                                    'ML', 'fertilizer_recommendation', 'fertilizer_recommendation.csv')
+            data = pd.read_csv(data_path)
+
+            # Label encoding for categorical features
+            le_soil = LabelEncoder()
+            data['Soil Type'] = le_soil.fit_transform(data['Soil Type'])
+            le_crop = LabelEncoder()
+            data['Crop Type'] = le_crop.fit_transform(data['Crop Type'])
+
+            # Splitting the data into input and output variables
+            X = data.iloc[:, :8]
+            y = data.iloc[:, -1]
+
+            # Training the Decision Tree Classifier model
+            model = DecisionTreeClassifier(random_state=0)
+            model.fit(X, y)
+
+            # Encode soil type and crop type
+            soil_enc = le_soil.transform([soil_type])[0]
+            crop_enc = le_crop.transform([crop_type])[0]
 
             # Prepare input data for prediction
-            input_data = np.array([[temperature, humidity, moisture, nitrogen, phosphorus, potassium]])
+            input_data = np.array([[temperature, humidity, moisture, soil_enc, crop_enc, nitrogen, phosphorus, potassium]])
             
             # Make prediction
             prediction = model.predict(input_data)[0]

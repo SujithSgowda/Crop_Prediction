@@ -9,6 +9,7 @@ class SoilData(models.Model):
     humidity = models.FloatField(help_text='Humidity percentage')
     rainfall = models.FloatField(help_text='Rainfall in mm')
     predicted_crop = models.CharField(max_length=100, blank=True)
+    confidence = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -19,7 +19,7 @@
             </div>
         </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
         <form id="fertilizerForm" method="post" class="space-y-8">
             {% csrf_token %}
             
@@ -80,7 +80,7 @@
             <!-- Nutrient Levels -->
             <div class="bg-gray-50/50 rounded-lg p-6 space-y-6">
                 <h3 class="text-lg font-semibold text-gray-900">Nutrient Levels</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div>
                         <label for="nitrogen" class="block text-sm font-medium text-blue-900 mb-1">Nitrogen (N)</label>
                         <input type="number" name="nitrogen" id="nitrogen" step="any" class="mui-input" required>
@@ -93,16 +93,8 @@
                         <label for="potassium" class="block text-sm font-medium text-blue-900 mb-1">Potassium (K)</label>
                         <input type="number" name="potassium" id="potassium" step="any" class="mui-input" required>
                     </div>
-                    <div>
-                        <label for="crop" class="block text-sm font-medium text-blue-900 mb-1">Crop</label>
-                        <input type="text" name="crop" id="crop" class="mui-input" required>
-                    </div>
                 </div>
-                <div class="flex justify-center mt-10">
-                    <button type="submit" class="mui-btn-primary">
-                        <span class="material-icons mr-2">science</span> Get Recommendation
-                    </button>
-                </div>
+
                 <style>
                     .mui-input {
                         width: 100%;
@@ -149,11 +141,12 @@
         </form>
 
         <!-- Result Section -->
-        <div id="fertilizer-result" class="mt-10 hidden">
+        <div id="result" class="mt-10 hidden">
             <div class="mui-result-card">
                 <span class="material-icons mui-result-icon">eco</span>
-                <h3 class="mui-result-title">Recommended Fertilizer</h3>
-                <p id="fertilizer-recommendation" class="mui-result-value"></p>
+                <h3 class="mui-result-title">Fertilizer Recommendation</h3>
+                <p id="prediction-text" class="mui-result-value"></p>
+                <p id="recommendation-text" class="mui-result-description mt-4"></p>
             </div>
             <style>
                 .mui-result-card {
@@ -186,47 +179,20 @@
                     font-weight: 500;
                     text-align: center;
                 }
+                .mui-result-description {
+                    font-size: 1.1rem;
+                    color: #475569;
+                    text-align: center;
+                    line-height: 1.5;
+                }
+                .mt-4 {
+                    margin-top: 1rem;
+                }
             </style>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-document.getElementById('fertilizerForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Show loading state
-    document.querySelector('button[type="submit"]').disabled = true;
-    document.querySelector('button[type="submit"]').innerHTML = 'Processing...';
-    
-    const formData = new FormData(this);
-    
-    fetch('{% url "fertilizer_recommendation:predict_fertilizer" %}', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('result').classList.remove('hidden');
-        document.getElementById('prediction-text').textContent = `Recommended Fertilizer: ${data.prediction}`;
-        document.getElementById('recommendation-text').textContent = data.recommendation;
-        
-        // Reset button state
-        document.querySelector('button[type="submit"]').disabled = false;
-        document.querySelector('button[type="submit"]').innerHTML = 'Get Recommendation';
-        
-        // Smooth scroll to results
-        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        // Reset button state
-        document.querySelector('button[type="submit"]').disabled = false;
-        document.querySelector('button[type="submit"]').innerHTML = 'Get Recommendation';
-    });
-});
-</script>
+<script src="{% static 'js/fertilizer_recommendation.js' %}"></script>
 {% endblock %}
