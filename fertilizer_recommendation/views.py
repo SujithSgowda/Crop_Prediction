@@ -23,8 +23,8 @@ def predict_fertilizer(request):
             potassium = float(request.POST.get('potassium'))
 
             # Load the dataset
-            data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-                                    'ML', 'fertilizer_recommendation', 'fertilizer_recommendation.csv')
+            data_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                    'media', 'datasets', 'fertilizer_recommendation.csv')
             data = pd.read_csv(data_path)
 
             # Label encoding for categorical features
