@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 # Load the dataset
-data_path = os.path.join(os.path.dirname(__file__), '../../ML/rainfall_prediction/rainfall_in_india_1901-2015.csv')
+data_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'media/datasets/rainfall_in_india_1901-2015.csv')
 df = pd.read_csv(data_path)
 
 def get_rainfall_prediction(state, year):

@@ -39,8 +39,8 @@ def load_model_and_scaler():
             os.path.join(settings.MEDIA_ROOT, 'models'),
         ]
         
-        model_files = ['crop_prediction_model.pkl', 'filetest2.pkl']
-        scaler_files = ['scaler.pkl']
+        model_files = ['crop_prediction_model.pkl', 'filetest2.pkl', 'crop_prediction_model.joblib', 'improved_crop_model.joblib']
+        scaler_files = ['scaler.pkl', 'crop_prediction_scaler.pkl', 'crop_prediction_scaler.joblib', 'improved_crop_scaler.joblib']
         
         model = None
         scaler = None
@@ -51,17 +51,29 @@ def load_model_and_scaler():
                 for model_file in model_files:
                     model_path = os.path.join(base_path, model_file)
                     if os.path.exists(model_path):
-                        model = joblib.load(model_path)
-                        logger.info(f"Model loaded from: {model_path}")
-                        break
+                        try:
+                            if model_file.endswith('.joblib'):
+                                model = joblib.load(model_path)
+                            else:
+                                model = joblib.load(model_path)
+                            logger.info(f"Model loaded from: {model_path}")
+                            break
+                        except Exception as e:
+                            logger.error(f"Error loading model from {model_path}: {e}")
                 
                 # Try to load scaler
                 for scaler_file in scaler_files:
                     scaler_path = os.path.join(base_path, scaler_file)
                     if os.path.exists(scaler_path):
-                        scaler = joblib.load(scaler_path)
-                        logger.info(f"Scaler loaded from: {scaler_path}")
-                        break
+                        try:
+                            if scaler_file.endswith('.joblib'):
+                                scaler = joblib.load(scaler_path)
+                            else:
+                                scaler = joblib.load(scaler_path)
+                            logger.info(f"Scaler loaded from: {scaler_path}")
+                            break
+                        except Exception as e:
+                            logger.error(f"Error loading scaler from {scaler_path}: {e}")
                 
                 if model:
                     break
@@ -194,3 +206,33 @@ def predict(request):
     except Exception as e:
         logger.error(f"Prediction error: {str(e)}")
         return JsonResponse({'error': f'An error occurred during prediction: {str(e)}'}, status=500)
+
+@require_http_methods(['GET'])
+def recent_predictions(request):
+    """Return recent crop predictions"""
+    try:
+        # Get the 10 most recent predictions
+        recent_data = SoilData.objects.all().order_by('-created_at')[:10]
+        
+        # Format the data for response
+        predictions = [{
+            'id': data.id,
+            'nitrogen': data.nitrogen,
+            'phosphorus': data.phosphorus,
+            'potassium': data.potassium,
+            'temperature': data.temperature,
+            'humidity': data.humidity,
+            'ph': data.ph,
+            'rainfall': data.rainfall,
+            'predicted_crop': data.predicted_crop,
+            'confidence': data.confidence,
+            'created_at': data.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        } for data in recent_data]
+        
+        return JsonResponse({
+            'success': True,
+            'predictions': predictions
+        })
+    except Exception as e:
+        logger.error(f"Error fetching recent predictions: {str(e)}")
+        return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)

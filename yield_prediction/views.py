@@ -20,8 +20,8 @@ def predict_yield(request):
             temperature = float(request.POST.get('temperature'))
             
             # Load historical crop production data
-            data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-                                   'ML', 'yield_prediction', 'crop_production_india.csv')
+            data_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                   'media', 'datasets', 'crop_production_karnataka.csv')
             crop_data = pd.read_csv(data_path)
             
             # Filter data for the specific state, district and crop
